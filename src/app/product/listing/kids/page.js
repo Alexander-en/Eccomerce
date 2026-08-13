@@ -1,8 +1,12 @@
 import CommonListing from "@/components/CommonListing";
-import { productByCategory } from "@/services/product";
-export const dynamic = "force-dynamic";
-export default async function KidsAllProducts() {
-  const getAllProducts = await productByCategory("kid");
+import connectToDB from "@/database";
+import Product from "@/models/product";
 
-  return <CommonListing data={getAllProducts && getAllProducts.data} />;
+export const dynamic = "force-dynamic";
+
+export default async function KidsAllProducts() {
+  await connectToDB();
+  const getAllProducts = await Product.find({ category: "kid" }).lean();
+
+  return <CommonListing data={getAllProducts} />;
 }
