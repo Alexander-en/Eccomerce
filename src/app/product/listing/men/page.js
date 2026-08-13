@@ -1,10 +1,8 @@
 import CommonListing from "@/components/CommonListing";
-import connectToDB from "@/database";
-import Product from "@/models/product";
+import { productByCategory } from "@/services/product";
 
 export default async function MenAllProducts() {
-  await connectToDB();
-  const getAllProducts = await Product.find({ category: "men" }).lean();
+  const getAllProducts = await productByCategory("men");
 
-  return <CommonListing data={getAllProducts} />;
+  return <CommonListing data={getAllProducts && getAllProducts.data} />;
 }
