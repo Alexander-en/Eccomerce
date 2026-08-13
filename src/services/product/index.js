@@ -1,5 +1,14 @@
 import Cookies from "js-cookie";
 
+const getApiBaseUrl = () => {
+  if (typeof window !== "undefined") return "";
+
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+
+  return "http://localhost:3000";
+};
+
 export const addNewProduct = async (formData) => {
   try {
     const response = await fetch("/api/admin/add-product", {
@@ -22,7 +31,7 @@ export const addNewProduct = async (formData) => {
 
 export const getAllAdminProducts = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/admin/all-products", {
+    const res = await fetch("/api/admin/all-products", {
       method: "GET",
       cache: "no-store",
     });
@@ -75,13 +84,10 @@ export const deleteAProduct = async (id) => {
 
 export const productByCategory = async (id) => {
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/client/product-by-category?id=${id}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`/api/client/product-by-category?id=${id}`, {
+      method: "GET",
+      cache: "no-store",
+    });
 
     const data = await res.json();
 
@@ -93,13 +99,10 @@ export const productByCategory = async (id) => {
 
 export const productById = async (id) => {
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/client/product-by-id?id=${id}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`/api/client/product-by-id?id=${id}`, {
+      method: "GET",
+      cache: "no-store",
+    });
 
     const data = await res.json();
 
@@ -113,8 +116,7 @@ export const productById = async (id) => {
 
 export const productByName = async (ProductName) =>{
   try{
-    const res = await fetch(
-      `http://localhost:3000/api/client/product-by-name?ProductName=${ProductName}`,{
+    const res = await fetch(`/api/client/product-by-name?ProductName=${ProductName}`, {
         method:"GET",
         cache:"no-store",
       }

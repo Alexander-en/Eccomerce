@@ -7,7 +7,7 @@ import { NextResponse } from "next/server"
 
 export const dynamic='force-dynamic'
 
-
+const DEFAULT_JWT_SECRET = "default_secret_key";
 
 const schema = Joi.object({
     email : Joi.string().email().required(),
@@ -47,7 +47,7 @@ export async function POST(req){
             const token = jwt.sign({
                 id : checkUser._id , email : checkUser?.email , role : checkUser?.role
 
-            }, process.env.JWT_SECRET || 'default_secret_key', {expiresIn : '1d'})
+            }, process.env.JWT_SECRET || DEFAULT_JWT_SECRET, {expiresIn : '1d'})
             
             const finalResult = {
                 token,

@@ -1,7 +1,6 @@
 "use client";
 
 import { GlobalContext } from "@/context";
-import { getAllAdminProducts } from "@/services/product";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 

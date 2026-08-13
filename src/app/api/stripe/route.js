@@ -19,12 +19,16 @@ export async function POST(req) {
 
       const res = await req.json();
 
+      const appUrl =
+        process.env.NEXT_PUBLIC_APP_URL ||
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: res,
         mode: "payment",
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/checkout?status=success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/checkout?status=cancel`,
+        success_url: `${appUrl}/checkout?status=success`,
+        cancel_url: `${appUrl}/checkout?status=cancel`,
       });
 
       return NextResponse.json({
