@@ -36,6 +36,10 @@ const createUniqueFileName = (file) => {
 };
 
 async function helperForUploadingImageToSupabase(file) {
+    if (!supabase) {
+        throw new Error("Supabase storage is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local.");
+    }
+
     const fileName = createUniqueFileName(file);
     const storagePath = `products/${fileName}`;
 
@@ -46,10 +50,7 @@ async function helperForUploadingImageToSupabase(file) {
             upsert: false,
         });
 
-    if (error) {
-        console.log(error);
-        return "";
-    }
+    if (error) throw new Error(error.message || "Supabase rejected the image upload.");
 
     const { data } = supabase.storage
         .from("EcommerceNextJS")
@@ -107,9 +108,16 @@ export default function AdminAddProduct() {
 
         setComponentLevelLoader({ loading: true, id: "" });
 
-        const imageUrl = selectedImage
-            ? await helperForUploadingImageToSupabase(selectedImage)
-            : formData.imageUrl || currentUpdatedProduct?.imageUrl || "";
+        let imageUrl;
+        try {
+            imageUrl = selectedImage
+                ? await helperForUploadingImageToSupabase(selectedImage)
+                : formData.imageUrl || currentUpdatedProduct?.imageUrl || "";
+        } catch (error) {
+            setComponentLevelLoader({ loading: false, id: "" });
+            toast.error(error.message || "Image upload failed.");
+            return;
+        }
 
         if (selectedImage && !imageUrl) {
             setComponentLevelLoader({

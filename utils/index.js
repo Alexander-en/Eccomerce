@@ -196,10 +196,12 @@ export const AvailableSizes = [
 ]
 
 
-export const supabase = createClient(
-  "https://cxehvplwdzimkpxoeque.supabase.co",
-  "sb_publishable_S1HHKgjwBAvXHG_wK1cghw_9oTJB4Gp"
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 
 export const addNewAddressFormControls = [
