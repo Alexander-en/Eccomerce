@@ -8,5 +8,5 @@ export default async function MenAllProducts() {
   await connectToDB();
   const getAllProducts = await Product.find({ category: "men" }).lean();
 
-  return <CommonListing data={getAllProducts} />;
+  return <CommonListing data={JSON.parse(JSON.stringify(getAllProducts))} />;
 }

@@ -14,7 +14,7 @@ export default function Home() {
     async function getListOfProducts() {
         const res = await getAllAdminProducts();
 
-        if (res.success) {
+        if (res?.success) {
             setProducts(res.data);
         }
     }
@@ -32,12 +32,12 @@ export default function Home() {
         (item) => item.category?.toLowerCase() === "men"
     );
 
-    const womenProduct = products?.find(
-        (item) => item.category?.toLowerCase() === "woman"
+    const womenProduct = products?.find((item) =>
+        ["women", "woman"].includes(item.category?.toLowerCase())
     );
 
-    const kidsProduct = products?.find(
-        (item) => item.category?.toLowerCase() === "kid"
+    const kidsProduct = products?.find((item) =>
+        ["kids", "kid"].includes(item.category?.toLowerCase())
     );
     return (
         <main className="bg-white text-gray-900">
@@ -261,8 +261,9 @@ export default function Home() {
                             className="group relative cursor-pointer overflow-hidden rounded-2xl"
                         >
                             <img
-                                src={kidsProduct?.imageUrl || "/placeholder.png"}
+                                src={kidsProduct?.imageUrl || "/file.svg"}
                                 alt="Kids collection"
+                                onError={(event) => { event.currentTarget.src = "/file.svg"; }}
                                 className="aspect-4/5 w-full object-cover transition duration-500 group-hover:scale-105"
                             />
 
@@ -291,8 +292,9 @@ export default function Home() {
                             className="group relative cursor-pointer overflow-hidden rounded-2xl"
                         >
                             <img
-                                src={womenProduct?.imageUrl || "/placeholder.png"}
+                                src={womenProduct?.imageUrl || "/file.svg"}
                                 alt="Women's collection"
+                                onError={(event) => { event.currentTarget.src = "/file.svg"; }}
                                 className="aspect-4/5 w-full object-cover transition duration-500 group-hover:scale-105"
                             />
 
@@ -319,8 +321,9 @@ export default function Home() {
                             className="group relative cursor-pointer overflow-hidden rounded-2xl sm:col-span-2 lg:col-span-1"
                         >
                             <img
-                                src={menProduct?.imageUrl || "/placeholder.png"}
+                                src={menProduct?.imageUrl || "/file.svg"}
                                 alt="Men's collection"
+                                onError={(event) => { event.currentTarget.src = "/file.svg"; }}
                                 className="aspect-4/5 w-full object-cover transition duration-500 group-hover:scale-105"
                             />
 

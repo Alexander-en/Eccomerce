@@ -37,7 +37,7 @@ const createUniqueFileName = (file) => {
 
 async function helperForUploadingImageToSupabase(file) {
     if (!supabase) {
-        throw new Error("Supabase storage is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local.");
+        throw new Error("Supabase storage is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY to .env.local.");
     }
 
     const fileName = createUniqueFileName(file);
@@ -115,7 +115,10 @@ export default function AdminAddProduct() {
                 : formData.imageUrl || currentUpdatedProduct?.imageUrl || "";
         } catch (error) {
             setComponentLevelLoader({ loading: false, id: "" });
-            toast.error(error.message || "Image upload failed.");
+            const message = error instanceof TypeError && error.message === "Failed to fetch"
+                ? "Could not reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL and your internet connection."
+                : error.message || "Image upload failed.";
+            toast.error(message);
             return;
         }
 

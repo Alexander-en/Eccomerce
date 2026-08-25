@@ -34,7 +34,7 @@ export async function POST(req) {
         await connectToDB();
         // const user = "admin";
         const isAuthUser= await AuthUser(req)
-        if (isAuthUser?.user === "admin") {
+        if (isAuthUser?.role === "admin") {
             const extractData = await req.json()
             const { name, description, price, category, sizes, deliveryInfo, onSale, priceDrop, imageUrl } = extractData || {}
             const {error} = AddNewProductSchema.validate({

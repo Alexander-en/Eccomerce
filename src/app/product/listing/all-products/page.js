@@ -8,5 +8,5 @@ export default async function AdminAllProducts() {
   await connectToDB();
   const getAllProducts = await Product.find({}).lean();
 
-  return <CommonListing data={getAllProducts} />;
+  return <CommonListing data={JSON.parse(JSON.stringify(getAllProducts))} />;
 }
