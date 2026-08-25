@@ -114,18 +114,3 @@ export const productById = async (id) => {
 
 
 
-export const productByName = async (ProductName) =>{
-  try{
-    const res = await fetch(`/api/client/product-by-name?ProductName=${ProductName}`, {
-        method:"GET",
-        cache:"no-store",
-      }
-    )
-
-    const data = await res.json()
-    return data
-
-  }catch(e){
-    console.log(e)
-  }
-}
