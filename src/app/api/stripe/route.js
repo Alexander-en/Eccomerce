@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req) {
   try {
     const isAuthUser = await AuthUser(req);
+
     if (isAuthUser) {
       if (!stripe) {
         return NextResponse.json({
@@ -20,8 +21,9 @@ export async function POST(req) {
       const res = await req.json();
 
       const appUrl =
-        process.env.NEXT_PUBLIC_APP_URL ||
-        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : `https://${process.env.VERCEL_URL}`;
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -44,10 +46,11 @@ export async function POST(req) {
     }
   } catch (e) {
     console.log(e);
+
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Something went wrong ! Please try again",
+      message: "Something went wrong! Please try again",
     });
   }
 }

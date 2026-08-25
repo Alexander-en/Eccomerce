@@ -3,28 +3,52 @@
 import CommonDetails from "@/components/CommonDetails";
 import { productById } from "@/services/product";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "@/context";
+import { PulseLoader } from "react-spinners";
 
 export default function ProductDetails() {
   const params = useParams();
+
+  const {
+    pageLevelLoader,
+    setPageLevelLoader,
+  } = useContext(GlobalContext);
+
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
     async function getProduct() {
-      const res = await productById(params.details);
+      try {
+        setPageLevelLoader(true);
 
-      console.log(res, "sangam");
+        const res = await productById(params.details);
 
-      setProduct(res?.data);
+        console.log(res, "sangam");
+
+        setProduct(res?.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setPageLevelLoader(false);
+      }
     }
 
     if (params.details) {
       getProduct();
     }
-  }, [params.details]);
+  }, [params.details, setPageLevelLoader]);
 
   if (!product) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full min-h-screen flex justify-center items-center">
+        <PulseLoader
+          color="#000000"
+          loading={pageLevelLoader}
+          size={30}
+        />
+      </div>
+    );
   }
 
   return <CommonDetails item={product} />;
